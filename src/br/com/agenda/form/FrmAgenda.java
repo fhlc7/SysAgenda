@@ -35,6 +35,8 @@ public class FrmAgenda extends JFrame {
 	private JTextField txtEmail;
 	private JTextField txtProcurar;
 	private JTable table;
+	private JFormattedTextField frmtdtxtfldFone;
+	private JTextArea txtrEndereco;
 
 	/**
 	 * Launch the application.
@@ -116,7 +118,7 @@ public class FrmAgenda extends JFrame {
 		lblFone.setBounds(23, 93, 55, 16);
 		panel.add(lblFone);
 
-		JFormattedTextField frmtdtxtfldFone = new JFormattedTextField();
+		frmtdtxtfldFone = new JFormattedTextField();
 		frmtdtxtfldFone.setText("Fone");
 		frmtdtxtfldFone.setBounds(96, 91, 114, 20);
 		panel.add(frmtdtxtfldFone);
@@ -129,7 +131,7 @@ public class FrmAgenda extends JFrame {
 		scrollPane.setBounds(96, 121, 426, 62);
 		panel.add(scrollPane);
 
-		JTextArea txtrEndereco = new JTextArea();
+		txtrEndereco = new JTextArea();
 		scrollPane.setViewportView(txtrEndereco);
 		txtrEndereco.setText("Endere\u00E7o");
 
@@ -161,6 +163,12 @@ public class FrmAgenda extends JFrame {
 				new String[] { "Endere\u00E7o", "E-mail", "Fone", "Nome", "id" }));
 
 		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				salvar();
+			}
+		});
+		btnSalvar.setMnemonic('s');
 		btnSalvar.setBounds(244, 412, 98, 26);
 		contentPane.add(btnSalvar);
 
@@ -177,6 +185,7 @@ public class FrmAgenda extends JFrame {
 		contentPane.add(btnAtualizar);
 
 		JButton btnFechar = new JButton("Fechar");
+		btnFechar.setMnemonic('f');
 		btnFechar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				fechar();
@@ -184,6 +193,23 @@ public class FrmAgenda extends JFrame {
 		});
 		btnFechar.setBounds(464, 412, 98, 26);
 		contentPane.add(btnFechar);
+	}
+
+	private void salvar() {
+		Pessoa pessoa = new Pessoa();
+		pessoa.setId(Integer.valueOf(txtId.getText()));
+		String nome = txtNome.getText();
+		if (nome.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Digite o nome");
+			txtNome.requestFocus();
+			return;
+		} else {
+			pessoa.setNome(nome);
+		}
+		pessoa.setFone(frmtdtxtfldFone.getText());
+		pessoa.setEmail(txtEmail.getText());
+		pessoa.setEndereco(txtrEndereco.getText());
+		PessoaControle.salvar(pessoa);
 	}
 
 	private void atualizarTabela() {
@@ -199,4 +225,13 @@ public class FrmAgenda extends JFrame {
 		}
 	}
 
+	private void limpar() {
+		txtProcurar.setText(null);
+		txtId.setText("0");
+		txtNome.setText(null);
+		frmtdtxtfldFone.setText(null);
+		txtEmail.setText(null);
+		txtrEndereco.setText(null);
+	}
+	
 }

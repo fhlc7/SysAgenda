@@ -32,13 +32,38 @@ public class PessoaDAO {
 		return lista;
 	}
 	
-	public void inserir(Pessoa pessoa) {
+	public void inserir(Pessoa pessoa) throws SQLException {
 		MySQL mySQL = new MySQL();
 		Connection con = mySQL.getConexao();
 		String sql = "INSERT INTO contato "
 				+ "(nome, fone, email, endereco) "
 				+ "VALUES (?, ?, ?, ?)";
-		
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setString(1, pessoa.getNome());
+		ps.setString(2, pessoa.getFone());
+		ps.setString(3, pessoa.getEmail());
+		ps.setString(4, pessoa.getEndereco());
+		ps.execute();
+		ps.close();
+		con.close();
+	}
+	
+	public void alterar(Pessoa pessoa) throws SQLException {
+		MySQL mySQL = new MySQL();
+		Connection con = mySQL.getConexao();
+		String sql = "UPDATE contato"
+						+ "SET nome = ?, fone = ?,"
+						+ "email = ?, endereco = ?"
+						+ "WHERE id = ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setString(1, pessoa.getNome());
+		ps.setString(2, pessoa.getFone());
+		ps.setString(3, pessoa.getEmail());
+		ps.setString(4, pessoa.getEndereco());
+		ps.setLong(5, pessoa.getId());
+		ps.execute();
+		ps.close();
+		con.close();
 	}
 	
 }

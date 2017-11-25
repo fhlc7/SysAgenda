@@ -41,4 +41,19 @@ public class PessoaControle {
 		return model;
 	}
 	
+	public static void salvar(Pessoa pessoa) {
+		try {
+			PessoaDAO dao = new PessoaDAO();
+			if (pessoa.getId() == 0) {
+				dao.inserir(pessoa);
+			} else {
+				dao.alterar(pessoa);
+			}
+			JOptionPane.showMessageDialog(null, "Salvo com sucesso");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(
+					null, "Erro ao tentar salvar contato: " + e);
+		}
+	}
+	
 }
