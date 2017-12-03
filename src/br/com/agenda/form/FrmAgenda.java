@@ -26,6 +26,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class FrmAgenda extends JFrame {
 
@@ -158,6 +160,12 @@ public class FrmAgenda extends JFrame {
 		panel_1.add(scrollPane_1);
 
 		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				editar();
+			}
+		});
 		scrollPane_1.setViewportView(table);
 		table.setModel(new DefaultTableModel(new Object[][] {},
 				new String[] { "Endere\u00E7o", "E-mail", "Fone", "Nome", "id" }));
@@ -173,10 +181,23 @@ public class FrmAgenda extends JFrame {
 		contentPane.add(btnSalvar);
 
 		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				deletar();
+			}
+		});
+		btnDeletar.setMnemonic('d');
 		btnDeletar.setBounds(354, 412, 98, 26);
 		contentPane.add(btnDeletar);
 
 		JButton btnNovo = new JButton("Novo");
+		btnNovo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				limpar();
+				txtNome.requestFocus();
+			}
+		});
+		btnNovo.setMnemonic('n');
 		btnNovo.setBounds(134, 412, 98, 26);
 		contentPane.add(btnNovo);
 
@@ -210,6 +231,7 @@ public class FrmAgenda extends JFrame {
 		pessoa.setEmail(txtEmail.getText());
 		pessoa.setEndereco(txtrEndereco.getText());
 		PessoaControle.salvar(pessoa);
+		atualizarTabela();
 	}
 
 	private void atualizarTabela() {
@@ -232,6 +254,25 @@ public class FrmAgenda extends JFrame {
 		frmtdtxtfldFone.setText(null);
 		txtEmail.setText(null);
 		txtrEndereco.setText(null);
+	}
+	
+	public void editar() {
+		int linha = table.getSelectedRow();
+		txtId.setText(table.getValueAt(linha, 0).toString());
+		txtNome.setText(table.getValueAt(linha, 1).toString());
+		frmtdtxtfldFone.setText(table.getValueAt(linha, 2).toString());
+		txtEmail.setText(table.getValueAt(linha, 3).toString());
+		txtrEndereco.setText(table.getValueAt(linha, 4).toString());
+	}
+	
+	public void deletar() {
+		int id = Integer.valueOf(txtId.getText());
+		int resp = JOptionPane.showConfirmDialog
+				(null, "Deseja apagar este contato?",
+						"Agenda", JOptionPane.YES_NO_OPTION);
+		if (resp == JOptionPane.YES_OPTION) {
+			PessoaControle.deletar(id);
+		}
 	}
 	
 }

@@ -55,5 +55,16 @@ public class PessoaControle {
 					null, "Erro ao tentar salvar contato: " + e);
 		}
 	}
+
+	public static void deletar(int id) {
+		try {
+			PessoaDAO dao = new PessoaDAO();
+			dao.deletar(id);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog
+				(null, "Erro ao tentar contato"
+						+ ": " + e);
+		}
+	}
 	
 }

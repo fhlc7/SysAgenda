@@ -51,9 +51,9 @@ public class PessoaDAO {
 	public void alterar(Pessoa pessoa) throws SQLException {
 		MySQL mySQL = new MySQL();
 		Connection con = mySQL.getConexao();
-		String sql = "UPDATE contato"
-						+ "SET nome = ?, fone = ?,"
-						+ "email = ?, endereco = ?"
+		String sql = "UPDATE contato "
+						+ "SET nome = ?, fone = ?, "
+						+ "email = ?, endereco = ? "
 						+ "WHERE id = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setString(1, pessoa.getNome());
@@ -61,6 +61,17 @@ public class PessoaDAO {
 		ps.setString(3, pessoa.getEmail());
 		ps.setString(4, pessoa.getEndereco());
 		ps.setLong(5, pessoa.getId());
+		ps.execute();
+		ps.close();
+		con.close();
+	}
+
+	public void deletar(int id) throws SQLException {
+		MySQL mySQL = new MySQL();
+		Connection con = mySQL.getConexao();
+		String sql = "DELETE FROM contato WHERE id = ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setInt(1, id);
 		ps.execute();
 		ps.close();
 		con.close();
