@@ -28,6 +28,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class FrmAgenda extends JFrame {
 
@@ -65,15 +67,19 @@ public class FrmAgenda extends JFrame {
 	 * Create the frame.
 	 */
 	public FrmAgenda() {
+		setResizable(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent arg0) {
+				limpar();
 				atualizarTabela();
+				txtProcurar.requestFocus();
 			}
 		});
 		setTitle("Agenda de Contatos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 590, 488);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -150,6 +156,12 @@ public class FrmAgenda extends JFrame {
 		panel_1.add(lblProcurar);
 
 		txtProcurar = new JTextField();
+		txtProcurar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				atualizarTabela();
+			}
+		});
 		txtProcurar.setText("Procurar");
 		txtProcurar.setBounds(85, 25, 440, 20);
 		panel_1.add(txtProcurar);
@@ -202,6 +214,14 @@ public class FrmAgenda extends JFrame {
 		contentPane.add(btnNovo);
 
 		JButton btnAtualizar = new JButton("Atualizar");
+		btnAtualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				limpar();
+				atualizarTabela();
+				txtProcurar.requestFocus();
+			}
+		});
+		btnAtualizar.setMnemonic('a');
 		btnAtualizar.setBounds(24, 412, 98, 26);
 		contentPane.add(btnAtualizar);
 
@@ -231,11 +251,13 @@ public class FrmAgenda extends JFrame {
 		pessoa.setEmail(txtEmail.getText());
 		pessoa.setEndereco(txtrEndereco.getText());
 		PessoaControle.salvar(pessoa);
+		limpar();
 		atualizarTabela();
+		txtProcurar.requestFocus();
 	}
 
 	private void atualizarTabela() {
-		table.setModel(PessoaControle.todosContatos());
+		table.setModel(PessoaControle.todosContatos(txtProcurar.getText()));
 	}
 
 	private void fechar() {
@@ -262,11 +284,16 @@ public class FrmAgenda extends JFrame {
 		txtNome.setText(table.getValueAt(linha, 1).toString());
 		frmtdtxtfldFone.setText(table.getValueAt(linha, 2).toString());
 		txtEmail.setText(table.getValueAt(linha, 3).toString());
-		txtrEndereco.setText(table.getValueAt(linha, 4).toString());
+		txtrEndereco.setText("" + table.getValueAt(linha, 4));
 	}
 	
 	public void deletar() {
 		int id = Integer.valueOf(txtId.getText());
+		if (id == 0) {
+			JOptionPane.showMessageDialog
+				(null, "Selecione um contato");
+			return;
+		}
 		int resp = JOptionPane.showConfirmDialog
 				(null, "Deseja apagar este contato?",
 						"Agenda", JOptionPane.YES_NO_OPTION);

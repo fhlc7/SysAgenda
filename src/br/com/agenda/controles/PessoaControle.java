@@ -12,7 +12,7 @@ import br.com.agenda.entidades.Pessoa;
 
 public class PessoaControle {
 
-	public static DefaultTableModel todosContatos() {
+	public static DefaultTableModel todosContatos(String procurar) {
 		DefaultTableModel model = null;
 		try {
 			String[] colunas = {"id", "Nome", "Fone", "E-mail","Endereço"};
@@ -23,7 +23,7 @@ public class PessoaControle {
 				}
 			};
 			PessoaDAO dao = new PessoaDAO();
-			List<Pessoa> lista = dao.listarTodos();
+			List<Pessoa> lista = dao.listarTodos(procurar);
 			for (Pessoa pessoa : lista) {
 				model.addRow(
 						new Object[] {

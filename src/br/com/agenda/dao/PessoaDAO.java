@@ -12,12 +12,13 @@ import br.com.agenda.entidades.Pessoa;
 
 public class PessoaDAO {
 	
-	public List<Pessoa> listarTodos() throws SQLException {
+	public List<Pessoa> listarTodos(String procurar) throws SQLException {
 		List<Pessoa> lista = new ArrayList<Pessoa>();
 		MySQL mySQL = new MySQL();
 		Connection con = mySQL.getConexao();
-		String sql = "SELECT * FROM contato;";
+		String sql = "SELECT * FROM contato WHERE nome LIKE ? ORDER BY id DESC;";
 		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setString(1, "%" + procurar + "%");
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			Pessoa pessoa = new Pessoa();
