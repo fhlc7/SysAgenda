@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 
 import br.com.agenda.controles.PessoaControle;
 import br.com.agenda.entidades.Pessoa;
@@ -24,12 +25,14 @@ import br.com.agenda.entidades.Pessoa;
 import javax.swing.JButton;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.ParseException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Toolkit;
 
 public class FrmAgenda extends JFrame {
 
@@ -39,7 +42,7 @@ public class FrmAgenda extends JFrame {
 	private JTextField txtEmail;
 	private JTextField txtProcurar;
 	private JTable table;
-	private JFormattedTextField frmtdtxtfldFone;
+	private JFormattedTextField txtFone;
 	private JTextArea txtrEndereco;
 
 	/**
@@ -67,6 +70,7 @@ public class FrmAgenda extends JFrame {
 	 * Create the frame.
 	 */
 	public FrmAgenda() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmAgenda.class.getResource("/com/sun/java/swing/plaf/windows/icons/HardDrive.gif")));
 		setResizable(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -126,10 +130,15 @@ public class FrmAgenda extends JFrame {
 		lblFone.setBounds(23, 93, 55, 16);
 		panel.add(lblFone);
 
-		frmtdtxtfldFone = new JFormattedTextField();
-		frmtdtxtfldFone.setText("Fone");
-		frmtdtxtfldFone.setBounds(96, 91, 114, 20);
-		panel.add(frmtdtxtfldFone);
+		try {
+			txtFone = new JFormattedTextField(new MaskFormatter("(##) #####-####"));
+		} catch (ParseException e) {
+			// TODO Bloco catch gerado automaticamente
+			e.printStackTrace();
+		}
+		txtFone.setText("Fone");
+		txtFone.setBounds(96, 91, 114, 20);
+		panel.add(txtFone);
 
 		JLabel lblEndereo = new JLabel("Endere\u00E7o:");
 		lblEndereo.setBounds(21, 122, 57, 16);
@@ -247,7 +256,7 @@ public class FrmAgenda extends JFrame {
 		} else {
 			pessoa.setNome(nome);
 		}
-		pessoa.setFone(frmtdtxtfldFone.getText());
+		pessoa.setFone(txtFone.getText());
 		pessoa.setEmail(txtEmail.getText());
 		pessoa.setEndereco(txtrEndereco.getText());
 		PessoaControle.salvar(pessoa);
@@ -273,21 +282,21 @@ public class FrmAgenda extends JFrame {
 		txtProcurar.setText(null);
 		txtId.setText("0");
 		txtNome.setText(null);
-		frmtdtxtfldFone.setText(null);
+		txtFone.setText(null);
 		txtEmail.setText(null);
 		txtrEndereco.setText(null);
 	}
 	
-	public void editar() {
+	private void editar() {
 		int linha = table.getSelectedRow();
 		txtId.setText(table.getValueAt(linha, 0).toString());
 		txtNome.setText(table.getValueAt(linha, 1).toString());
-		frmtdtxtfldFone.setText(table.getValueAt(linha, 2).toString());
+		txtFone.setText(table.getValueAt(linha, 2).toString());
 		txtEmail.setText(table.getValueAt(linha, 3).toString());
 		txtrEndereco.setText("" + table.getValueAt(linha, 4));
 	}
 	
-	public void deletar() {
+	private void deletar() {
 		int id = Integer.valueOf(txtId.getText());
 		if (id == 0) {
 			JOptionPane.showMessageDialog
@@ -299,6 +308,9 @@ public class FrmAgenda extends JFrame {
 						"Agenda", JOptionPane.YES_NO_OPTION);
 		if (resp == JOptionPane.YES_OPTION) {
 			PessoaControle.deletar(id);
+			limpar();
+			atualizarTabela();
+			txtProcurar.requestFocus();
 		}
 	}
 	

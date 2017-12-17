@@ -60,6 +60,8 @@ public class PessoaControle {
 		try {
 			PessoaDAO dao = new PessoaDAO();
 			dao.deletar(id);
+			JOptionPane.showMessageDialog
+				(null, "Deletado com sucesso");
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog
 				(null, "Erro ao tentar contato"

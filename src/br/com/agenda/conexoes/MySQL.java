@@ -14,7 +14,7 @@ public class MySQL {
 		try {
 			String caminho = "jdbc:mysql://localhost/dbagenda";
 			String usuario = "root";
-			String senha = "";
+			String senha = "root";
 			con = DriverManager.getConnection(caminho, usuario, senha);
 			System.out.println("Conectado com sucesso");
 		} catch (Exception e) {
@@ -28,7 +28,7 @@ public class MySQL {
 		try {
 			String caminho = "jdbc:mysql://localhost/";
 			String usuario = "root";
-			String senha = "";
+			String senha = "root";
 			con = DriverManager.getConnection(caminho, usuario, senha);
 			System.out.println("Conectado com sucesso");
 		} catch (Exception e) {
