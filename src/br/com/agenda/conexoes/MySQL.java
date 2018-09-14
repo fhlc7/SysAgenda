@@ -13,7 +13,7 @@ public class MySQL {
 		Connection con = null;
 		try {
 			String caminho = "jdbc:mysql://localhost/dbagenda";
-			String usuario = "root";;
+			String usuario = "root";
 			String senha = "";
 			con = DriverManager.getConnection(caminho, usuario, senha);
 			System.out.println("Conectado com sucesso");
